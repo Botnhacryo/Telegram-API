@@ -19,8 +19,8 @@ client = TelegramClient(phoneNo, api_id, api_hash)
 client.connect()
 if not client.is_user_authorized():
     client.send_code_request(phoneNo)
-    client.sign_in(phoneNo, input('Enter the code: '))
-    print("Successful login")
+    client.sign_in(phoneNo, input('Nhập mã: '))
+    print("Đăng nhập thành công")
 
 chats = []
 last_date = None
@@ -50,16 +50,16 @@ for chat in chats:
 # https://python.gotrained.com/adding-telegram-members-to-your-groups-telethon-python/
 
 
-print('Choose a group to scrape members from:')
+print('Chọn một nhóm để loại bỏ các thành viên:')
 i = 0
 for g in groups:
     print(str(i) + '- ' + g.title)
     i += 1
 
-g_index = input("Enter group Number")
+g_index = input("Nhập số nhóm")
 target_group = groups[int(g_index)]
 
-print("Fetching Members: ")
+print("Tìm nạp thành viên: ")
 
 all_participants = []
 all_participants = client.get_participants(target_group, aggressive=True)
@@ -70,7 +70,7 @@ for all_participant in all_participants:
 
 input_file = "./members.csv"
 
-print('Saving In file...')
+print('Đang lưu trong tệp ...')
 with open(input_file, "w", encoding='UTF-8') as f:
     writer = csv.writer(f, delimiter=",", lineterminator="\n")
     writer.writerow(['username', 'user id', 'access_hash', 'name', 'group', 'group id'])
@@ -89,7 +89,7 @@ with open(input_file, "w", encoding='UTF-8') as f:
             last_name = ""
         name = (first_name + ' ' + last_name).strip()
         writer.writerow([username, user.id, user.access_hash, name, target_group.title, target_group.id])
-print('Members scraped successfully.')
+print('Thành viên đã được cạo thành công.')
 f.close()
 
 ########################################################################################################################
@@ -128,27 +128,27 @@ for chat in chats:
     except:
         continue
 
-print('Choose a group to add members:')
+print('Chọn một nhóm để thêm thành viên:')
 i = 0
 for group in toGroups:
     print(str(i) + '- ' + group.title)
     i += 1
 
-g_index = input("Enter a Number: ")
+g_index = input("Nhập một số: ")
 target_group = toGroups[int(g_index)]
-print("*****target: ", target_group)
+print("*****Mục tiêu: ", target_group)
 
 if type(target_group) == Channel:
     target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
 
-mode = int(input("Enter 1 to add by username or 2 to add by ID: "))
+mode = int(input("Nhập 1 để thêm theo tên người dùng hoặc 2 để thêm theo ID: "))
 n = 0
 for user in users:
     n += 1
     if n % 50 == 0:
         time.sleep(900)
     try:
-        print("Adding {}".format(user['id']))
+        print("Thêm {}".format(user['id']))
         if mode == 1:
             print("UserName: ", user['username'])
             if user['username'] == "":
@@ -160,28 +160,28 @@ for user in users:
             print("USerId, USerHash", user['id'], user['access_hash'])
 
         else:
-            sys.exit("Invalid Mode Selected. Please Try Again.")
+            sys.exit("Đã chọn chế độ không hợp lệ. Vui lòng thử lại.")
 
         if type(target_group) == Channel:
             client(InviteToChannelRequest(target_group_entity, [user_to_add]))
-            print("its channel")
+            print("kênh của nó")
 
         elif type(target_group) == Chat:
             client(AddChatUserRequest(target_group, user_to_add, fwd_limit=50))
-            print("its chat")
+            print("cuộc trò chuyện của nó")
 
         else:
-            print("Something is wrong!!!")
+            print("Có cái gì đó không đúng!!!")
 
-        print("Waiting for 10-30 Seconds...")
+        print("Chờ 10-30 giây...")
         time.sleep(random.randrange(10, 30))
     except PeerFloodError:
-        print("Getting Flood Error from telegram. Script is stopping now. Please try again after some time.")
+        print("Nhận lỗi lũ lụt từ điện tín. Tập lệnh hiện đang dừng. Vui lòng thử lại sau một thời gian.")
     except UserPrivacyRestrictedError:
-        print("The user's privacy settings do not allow you to do this. Skipping.")
+        print("Cài đặt quyền riêng tư của người dùng không cho phép bạn làm điều này. Bỏ qua.")
     except:
         traceback.print_exc()
-        print("Unexpected Error")
+        print("Lỗi không mong đợi")
         continue
 
-print('Added members:')
+print('Thành viên đã thêm:')

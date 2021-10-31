@@ -11,9 +11,9 @@ import traceback
 import time
 import random
 
-api_id = 739525
-api_hash = 'd8270b37a44256287bb1d93b7c557d8b'
-phoneNo = '+919915130944'
+api_id = 4231409
+api_hash = 'c1828f4f9181fb4d9b6deb95e5f05862'
+phoneNo = 'xxxx'
 client = TelegramClient(phoneNo, api_id, api_hash)
 
 client.connect()
